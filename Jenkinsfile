@@ -24,14 +24,26 @@ pipeline {
 				sh "mvn clean compile"
 			}
 		}
-		stage('Test') {
+		stage('Package') {
 			steps {
-				sh "mvn test"
+				sh "mvn package -DskipTests"
 			}
 		}
-		stage('Integration Test') {
+		stage('Build docker image') {
 			steps {
-				sh "mvn failsafe:integration-test failsafe:verify"
+				script {
+					dockerImage = docker.build("mallikarjunaraok/java-maven-project:$env.BUILD_TAG")
+				}
+			}
+		}
+		stage('push docker Image') {
+			steps {
+				script {
+					docker.withRegistry('', 'dockerhub') {
+						dockerImage.push();
+						dockerImage.push();
+					}
+				}
 			}
 		}
 	}
