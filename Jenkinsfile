@@ -17,4 +17,15 @@ pipeline {
 			}
 		}
 	}
+	post {
+		always {
+			echo "I am god . I run always"
+		}
+		success {
+			echo "I run . whe it is success"
+		}
+		failure {
+			echo "when it is failure"
+		}
+	}
 }
